@@ -1,0 +1,22 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>fan</groupId>
+        <artifactId>fancy-boot-parent</artifactId>
+        <version>1.1.1</version>
+        <relativePath>../fancy-boot-parent</relativePath>
+    </parent>
+
+    <artifactId>fancy-boot-starters</artifactId>
+    <packaging>pom</packaging>
+    <name>fancy-boot-starters</name>
+
+    <modules>
+        <module>fancy-mybatis-plus-spring-boot-starter</module>
+        <module>fancy-log-spring-boot-starter</module>
+        <module>fancy-redis-spring-boot-starter</module>
+        <module>fancy-jackson-spring-boot-starter</module>
+        <module>fancy-resource-server-spring-boot-starter</module>
+    </modules>
+</project>
