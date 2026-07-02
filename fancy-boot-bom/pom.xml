@@ -10,7 +10,35 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>fan</groupId>
+                <artifactId>fancy-resource-server-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
+            <dependency>
+                <groupId>fan</groupId>
+                <artifactId>fancy-jackson-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>fan</groupId>
+                <artifactId>fancy-log-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>fan</groupId>
+                <artifactId>fancy-redis-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>fan</groupId>
+                <artifactId>fancy-mybatis-plus-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
