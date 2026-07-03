@@ -3,7 +3,8 @@ package fancy.log.starter.properties;
 import fancy.log.starter.annotation.Log;
 import fancy.log.starter.aspect.ControllerLogAspect;
 import fancy.log.starter.aspect.LogAspect;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -11,7 +12,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author Fan
  */
-@Data
+@Getter
+@Setter
 @ConfigurationProperties(prefix = "fancy.log")
 public class LogProperties {
 
@@ -55,7 +57,8 @@ public class LogProperties {
      */
     private int maxResultLength = 2048;
 
-    @Data
+    @Getter
+    @Setter
     public static class Annotation {
         /**
          * 是否启用 {@link Log} 切面.
@@ -63,7 +66,8 @@ public class LogProperties {
         private boolean enabled = true;
     }
 
-    @Data
+    @Getter
+    @Setter
     public static class Controller {
         /**
          * 是否启用 Controller 切面.

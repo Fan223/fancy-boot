@@ -15,25 +15,25 @@ public @interface Log {
     /**
      * 描述信息.
      */
-    String value() default "";
+    String value();
 
     /**
      * 是否打印参数.
      */
-    boolean printArgs() default true;
+    boolean printArgs();
 
     /**
      * 最大参数长度.
      */
-    int maxArgsLength() default 2048;
+    int maxArgsLength();
 
     /**
      * 是否打印返回结果.
      */
-    boolean printResult() default true;
+    boolean printResult();
 
     /**
      * 最大返回结果长度.
      */
-    int maxResultLength() default 2048;
+    int maxResultLength();
 }

@@ -1,9 +1,10 @@
 package fancy.log.starter.printer;
 
+import fancy.boot.core.lang.StringUtils;
 import fancy.log.starter.event.LogEvent;
-import io.micrometer.common.util.StringUtils;
-import lombok.experimental.UtilityClass;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 
 import java.util.Arrays;
 
@@ -12,9 +13,23 @@ import java.util.Arrays;
  *
  * @author Fan
  */
-@UtilityClass
 @Slf4j
+//@UtilityClass
+@RequiredArgsConstructor
 public class LogPrinter {
+
+    /**
+     * Spring 环境, 由 {@code LogAutoConfiguration} 注入, 用于在 {@code properties.serviceName} 为空时
+     * 回填 {@code spring.application.name}.
+     */
+    private final Environment environment;
+
+    /**
+     * 由 {@code LogAutoConfiguration} 在启动期注入.
+     */
+//    public static void setEnvironment(Environment environment) {
+//        LogPrinter.environment = environment;
+//    }
 
     /**
      * 打印日志.
@@ -29,7 +44,7 @@ public class LogPrinter {
             msg.append("[").append(tag).append("] ");
         }
 
-        String serviceName = event.serviceName();
+        String serviceName = resolveServiceName(event.serviceName());
         if (StringUtils.isNotBlank(serviceName)) {
             msg.append(serviceName).append(" | ");
         }
@@ -57,6 +72,16 @@ public class LogPrinter {
             // 会自动打印完整的异常堆栈信息
             log.error("{}", msg, exception);
         }
+    }
+
+    private static String resolveServiceName(String configured) {
+        if (StringUtils.isNotBlank(configured)) {
+            return configured;
+        }
+        if (environment != null) {
+            return environment.getProperty("spring.application.name");
+        }
+        return null;
     }
 
     /**

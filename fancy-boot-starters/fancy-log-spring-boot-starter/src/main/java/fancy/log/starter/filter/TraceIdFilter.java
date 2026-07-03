@@ -1,7 +1,7 @@
 package fancy.log.starter.filter;
 
+import fancy.boot.core.lang.StringUtils;
 import fancy.boot.core.util.IdUtils;
-import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
