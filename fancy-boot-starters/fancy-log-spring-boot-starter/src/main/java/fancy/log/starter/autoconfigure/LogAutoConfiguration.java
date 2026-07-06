@@ -4,6 +4,7 @@ import fancy.log.starter.aspect.ControllerLogAspect;
 import fancy.log.starter.aspect.LogAdvice;
 import fancy.log.starter.aspect.LogAspect;
 import fancy.log.starter.filter.TraceIdFilter;
+import fancy.log.starter.printer.LogPrinter;
 import fancy.log.starter.properties.LogProperties;
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
@@ -31,27 +32,29 @@ public class LogAutoConfiguration {
 
     private final Environment environment;
 
-//    @PostConstruct
-//    public void init() {
-//        LogPrinter.setEnvironment(environment);
-//    }
+    @Bean
+    @ConditionalOnMissingBean
+    public LogPrinter logPrinter() {
+        return new LogPrinter(environment);
+    }
 
     @Bean
     @ConditionalOnMissingBean
-    public LogAdvice logAdvice() {
-        return new LogAdvice(properties);
+    public LogAdvice logAdvice(LogPrinter printer) {
+        return new LogAdvice(properties, printer);
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    public LogAspect logAspect(LogAdvice logAdvice) {
+        return new LogAspect(properties, logAdvice);
     }
 
     @Bean
     @ConditionalOnMissingBean
     public ControllerLogAspect controllerLogAspect(LogAdvice logAdvice) {
         return new ControllerLogAspect(properties, logAdvice);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public LogAspect logAspect(LogAdvice logAdvice) {
-        return new LogAspect(properties, logAdvice);
     }
 
     @Bean

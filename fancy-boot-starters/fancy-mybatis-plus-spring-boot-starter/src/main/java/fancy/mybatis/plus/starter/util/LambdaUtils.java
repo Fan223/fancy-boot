@@ -1,5 +1,6 @@
 package fancy.mybatis.plus.starter.util;
 
+import fancy.boot.core.lang.StringUtils;
 import lombok.experimental.UtilityClass;
 
 import java.io.Serializable;

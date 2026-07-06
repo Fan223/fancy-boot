@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class P6SpyEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
-    private static final String LOG_FORMAT = "分类: %(category)\t耗时: %(executionTime)ms\n\t%(sql)";
+    private static final String LOG_FORMAT = "分类: %(category) | 耗时: %(executionTime)ms | \n\t%(sql)";
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, @NonNull SpringApplication application) {

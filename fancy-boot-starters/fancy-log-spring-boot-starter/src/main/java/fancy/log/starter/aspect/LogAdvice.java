@@ -7,24 +7,27 @@ import fancy.log.starter.properties.LogProperties;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * 日志切面公共处理. 由 {@link LogAspect} 和 {@link ControllerLogAspect} 委托调用,
- * 消除 try-catch-finally + publishEvent 的重复实现.
+ * 日志切面公共处理.
  *
  * @author Fan
  */
-@Component
 @RequiredArgsConstructor
 public class LogAdvice {
 
     private final LogProperties properties;
 
+    private final LogPrinter printer;
+
     /**
-     * 执行切面逻辑. {@code log} 为 null 时使用全局 properties.
+     * 执行切面逻辑.
+     *
+     * @param joinPoint {@link ProceedingJoinPoint}
+     * @param log       {@link Log}
+     * @return {@link Object}
      */
     public Object execute(ProceedingJoinPoint joinPoint, Log log) throws Throwable {
         long start = System.nanoTime();
@@ -43,6 +46,15 @@ public class LogAdvice {
         }
     }
 
+    /**
+     * 发布日志事件, {@link Log} 为 null 时使用 {@link LogProperties}.
+     *
+     * @param joinPoint {@link ProceedingJoinPoint}
+     * @param log       {@link Log}
+     * @param result    返回结果
+     * @param exception {@link Throwable}
+     * @param costMs    耗时
+     */
     private void publishEvent(ProceedingJoinPoint joinPoint, Log log, Object result, Throwable exception, long costMs) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 
@@ -63,6 +75,6 @@ public class LogAdvice {
                 .costMs(costMs)
                 .exception(exception)
                 .build();
-        LogPrinter.print(event);
+        printer.print(event);
     }
 }

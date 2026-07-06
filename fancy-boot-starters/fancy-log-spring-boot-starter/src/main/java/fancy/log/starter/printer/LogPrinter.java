@@ -14,29 +14,17 @@ import java.util.Arrays;
  * @author Fan
  */
 @Slf4j
-//@UtilityClass
 @RequiredArgsConstructor
 public class LogPrinter {
 
-    /**
-     * Spring 环境, 由 {@code LogAutoConfiguration} 注入, 用于在 {@code properties.serviceName} 为空时
-     * 回填 {@code spring.application.name}.
-     */
     private final Environment environment;
-
-    /**
-     * 由 {@code LogAutoConfiguration} 在启动期注入.
-     */
-//    public static void setEnvironment(Environment environment) {
-//        LogPrinter.environment = environment;
-//    }
 
     /**
      * 打印日志.
      *
      * @param event {@link LogEvent}
      */
-    public static void print(LogEvent event) {
+    public void print(LogEvent event) {
         StringBuilder msg = new StringBuilder(128);
 
         String tag = event.tag();
@@ -46,23 +34,23 @@ public class LogPrinter {
 
         String serviceName = resolveServiceName(event.serviceName());
         if (StringUtils.isNotBlank(serviceName)) {
-            msg.append(serviceName).append(" | ");
+            msg.append("服务: ").append(serviceName).append(" | ");
         }
 
-        msg.append(event.className())
+        msg.append("接口: ").append(event.className())
                 .append('#')
                 .append(event.methodName())
-                .append(" | 耗时=")
+                .append(" | 耗时: ")
                 .append(event.costMs())
                 .append("ms");
 
         String args = sanitize(event.args(), event.maxArgsLength());
         if (args != null) {
-            msg.append(" | 入参=").append(args);
+            msg.append(" | 入参: ").append(args);
         }
         String result = sanitize(event.result(), event.maxResultLength());
         if (result != null) {
-            msg.append(" | 返回结果=").append(result);
+            msg.append(" | \n\t返回结果: ").append(result);
         }
 
         Throwable exception = event.exception();
@@ -74,9 +62,9 @@ public class LogPrinter {
         }
     }
 
-    private static String resolveServiceName(String configured) {
-        if (StringUtils.isNotBlank(configured)) {
-            return configured;
+    private String resolveServiceName(String serviceName) {
+        if (StringUtils.isNotBlank(serviceName)) {
+            return serviceName;
         }
         if (environment != null) {
             return environment.getProperty("spring.application.name");

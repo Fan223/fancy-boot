@@ -23,11 +23,11 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>fan</groupId>-->
-        <!--            <artifactId>fancy-boot-core</artifactId>-->
-        <!--            <version>1.1.1</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>fan</groupId>
+            <artifactId>fancy-boot-core</artifactId>
+            <version>1.1.1</version>
+        </dependency>
 
         <dependency>
             <groupId>com.baomidou</groupId>

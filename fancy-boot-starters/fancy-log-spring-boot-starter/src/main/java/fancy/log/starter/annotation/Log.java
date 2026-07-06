@@ -20,20 +20,20 @@ public @interface Log {
     /**
      * 是否打印参数.
      */
-    boolean printArgs();
+    boolean printArgs() default true;
 
     /**
      * 最大参数长度.
      */
-    int maxArgsLength();
+    int maxArgsLength() default 2048;
 
     /**
      * 是否打印返回结果.
      */
-    boolean printResult();
+    boolean printResult() default true;
 
     /**
      * 最大返回结果长度.
      */
-    int maxResultLength();
+    int maxResultLength() default 2048;
 }
