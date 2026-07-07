@@ -5,7 +5,7 @@
     <parent>
         <groupId>fan</groupId>
         <artifactId>fancy-boot-starters</artifactId>
-        <version>1.1.1</version>
+        <version>4.1.0</version>
     </parent>
 
     <artifactId>fancy-log-spring-boot-starter</artifactId>
@@ -25,12 +25,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
             <exclusions>
@@ -40,13 +34,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.lmax</groupId>
-            <artifactId>disruptor</artifactId>
         </dependency>
 
         <dependency>

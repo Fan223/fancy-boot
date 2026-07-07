@@ -4,13 +4,12 @@
     <parent>
         <groupId>fan</groupId>
         <artifactId>fancy-boot-parent</artifactId>
-        <version>1.1.1</version>
-        <relativePath>../fancy-boot-parent/pom.xml</relativePath>
+        <version>4.1.0</version>
+        <relativePath>../fancy-boot-parent</relativePath>
     </parent>
 
     <artifactId>fancy-boot-core</artifactId>
     <packaging>jar</packaging>
-
     <name>fancy-boot-core</name>
 
     <dependencies>

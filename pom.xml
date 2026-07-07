@@ -5,26 +5,30 @@
 
     <groupId>fan</groupId>
     <artifactId>fancy-boot</artifactId>
-    <version>1.1.1</version>
+    <version>4.1.0</version>
     <packaging>pom</packaging>
 
     <name>fancy-boot</name>
     <description>fancy-boot</description>
-    <url/>
+    <url>https://github.com/Fan223/fancy-boot</url>
 
     <licenses>
         <license/>
     </licenses>
 
     <developers>
-        <developer/>
+        <developer>
+            <id>Fan</id>
+            <name>Fancy</name>
+            <email>fanj.zh@foxmail.com</email>
+            <url>https://fan223.cn</url>
+        </developer>
     </developers>
 
     <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
+        <connection>scm:git:https://github.com/Fan223/fancy-boot.git</connection>
+        <developerConnection>scm:git:git@github.com:Fan223/fancy-boot.git</developerConnection>
+        <url>https://github.com/Fan223/fancy-boot</url>
     </scm>
 
     <modules>

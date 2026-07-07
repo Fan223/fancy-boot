@@ -4,7 +4,7 @@
     <parent>
         <groupId>fan</groupId>
         <artifactId>fancy-boot-starters</artifactId>
-        <version>1.1.1</version>
+        <version>4.1.0</version>
     </parent>
 
     <artifactId>fancy-datasource-spring-boot-starter</artifactId>
@@ -12,6 +12,12 @@
     <name>fancy-datasource-spring-boot-starter</name>
 
     <dependencies>
+        <dependency>
+            <groupId>fan</groupId>
+            <artifactId>fancy-boot-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>

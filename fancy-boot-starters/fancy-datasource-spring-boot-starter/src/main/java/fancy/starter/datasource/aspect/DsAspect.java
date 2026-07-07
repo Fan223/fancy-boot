@@ -1,15 +1,11 @@
 package fancy.starter.datasource.aspect;
 
+import fancy.boot.core.annotation.AnnotationResolver;
 import fancy.starter.datasource.annotation.Ds;
 import fancy.starter.datasource.context.DataSourceContextHolder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.util.ClassUtils;
-
-import java.lang.reflect.Method;
 
 /**
  * 数据源切面.
@@ -22,7 +18,7 @@ public class DsAspect {
     @Around("@within(fancy.starter.datasource.annotation.Ds) || @annotation(fancy.starter.datasource.annotation.Ds)")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         // 解析数据源注解, 没有注解则继续执行原方法
-        Ds ds = resolveDs(joinPoint);
+        Ds ds = AnnotationResolver.resolve(joinPoint, Ds.class);
         if (ds == null) {
             return joinPoint.proceed();
         }
@@ -34,20 +30,5 @@ public class DsAspect {
         } finally {
             DataSourceContextHolder.poll();
         }
-    }
-
-    private Ds resolveDs(ProceedingJoinPoint joinPoint) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Class<?> targetClass = joinPoint.getTarget().getClass();
-
-        // 获取具体的方法(解决接口/代理/泛型桥接问题)
-        Method method = ClassUtils.getMostSpecificMethod(signature.getMethod(), targetClass);
-        // 优先从方法上找注解
-        Ds ds = AnnotatedElementUtils.findMergedAnnotation(method, Ds.class);
-        if (ds != null) {
-            return ds;
-        }
-        // 方法上没有再从类上找
-        return AnnotatedElementUtils.findMergedAnnotation(targetClass, Ds.class);
     }
 }
