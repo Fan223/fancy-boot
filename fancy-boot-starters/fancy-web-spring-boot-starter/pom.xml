@@ -9,19 +9,19 @@
 
     <artifactId>fancy-web-spring-boot-starter</artifactId>
     <packaging>jar</packaging>
-
     <name>fancy-web-spring-boot-starter</name>
-    <url>http://maven.apache.org</url>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>fan</groupId>
             <artifactId>fancy-boot-core</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
