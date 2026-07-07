@@ -1,7 +1,6 @@
-package fancy.boot.core.util;
+package fancy.boot.core.net;
 
 import fancy.boot.core.http.NetException;
-import fancy.boot.core.lang.ByteUtils;
 import lombok.experimental.UtilityClass;
 
 import java.net.InetAddress;
@@ -31,15 +30,6 @@ public class NetUtils {
     }
 
     /**
-     * 获取本地主机 IP 地址.
-     *
-     * @return {@link String}
-     */
-    public static String getLocalHostAddress() {
-        return getLocalHost().getHostAddress();
-    }
-
-    /**
      * 获取本地主机硬件地址.
      *
      * @return {@code byte[]}
@@ -61,16 +51,5 @@ public class NetUtils {
         } catch (SocketException e) {
             throw new NetException("Failed to get hardware address for address: " + addr.getHostAddress(), e);
         }
-    }
-
-    /**
-     * 获取指定 {@link InetAddress} 的硬件地址字符串.
-     *
-     * @param addr {@link InetAddress}
-     * @return {@link String}
-     */
-    public static String getHardwareAddressString(InetAddress addr) {
-        byte[] address = getHardwareAddress(addr);
-        return null == address ? null : ByteUtils.toHexString(address);
     }
 }

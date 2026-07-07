@@ -37,7 +37,7 @@ public class WebUtils {
 
         if (!file.exists()) {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            Response<String> res = Response.success("文件不存在");
+            Response<String> res = Response.fail("文件不存在");
             try (ServletOutputStream out = response.getOutputStream()) {
                 out.write(res.message().getBytes(StandardCharsets.UTF_8));
                 out.flush();

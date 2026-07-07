@@ -1,4 +1,4 @@
-package fancy.mybatis.plus.starter.util;
+package fancy.mybatis.plus.starter.util.reflect;
 
 import lombok.experimental.UtilityClass;
 
@@ -159,20 +159,6 @@ public class ClassUtils {
             }
         }
         return false;
-    }
-
-    /**
-     * 通过全路径类名获取 {@link Class}.
-     *
-     * @param className 全路径类名
-     * @return {@link Class}
-     */
-    public static Class<?> getClass(String className) {
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            throw new ReflectException(e);
-        }
     }
 
     /**

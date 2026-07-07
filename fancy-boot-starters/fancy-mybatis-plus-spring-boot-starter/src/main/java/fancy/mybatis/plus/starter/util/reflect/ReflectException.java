@@ -1,4 +1,4 @@
-package fancy.mybatis.plus.starter.util;
+package fancy.mybatis.plus.starter.util.reflect;
 
 import java.io.Serial;
 

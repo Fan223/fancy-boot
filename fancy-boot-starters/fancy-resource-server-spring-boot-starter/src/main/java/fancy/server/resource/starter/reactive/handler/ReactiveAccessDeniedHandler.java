@@ -43,7 +43,7 @@ public class ReactiveAccessDeniedHandler implements ServerAccessDeniedHandler {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAcceptCharset(List.of(StandardCharsets.UTF_8));
 
-        byte[] body = jsonMapper.writeValueAsBytes(Response.fail(HttpStatus.FORBIDDEN.value(), message));
+        byte[] body = jsonMapper.writeValueAsBytes(Response.forbidden(message));
         DataBuffer buffer = response.bufferFactory().wrap(body);
         return response.writeWith(Mono.just(buffer));
     }

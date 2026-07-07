@@ -1,6 +1,5 @@
 package fancy.boot.core.http;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Objects;
@@ -22,17 +21,6 @@ public record Response<T>(int code, String message, T data) {
      */
     public Response {
         Objects.requireNonNull(message, "message must not be null.");
-    }
-
-    /**
-     * 返回使用指定 {@link HttpStatus} 创建的 {@link Response} 实例.
-     *
-     * @param status {@link HttpStatus}
-     * @param data   数据
-     * @return {@link Response}
-     */
-    public static <T> Response<T> of(HttpStatus status, T data) {
-        return of(status.value(), status.reasonPhrase(), data);
     }
 
     /**
@@ -59,45 +47,6 @@ public record Response<T>(int code, String message, T data) {
     }
 
     /**
-     * 成功响应, 使用 {@link HttpStatus#OK}, 数据为 {@code null}.
-     *
-     * @return {@link Response<T>}
-     */
-    public static <T> Response<T> success() {
-        return success(null);
-    }
-
-    /**
-     * 成功响应, 使用 {@link HttpStatus#OK}, 指定数据.
-     *
-     * @param data 数据
-     * @return {@link Response}
-     */
-    public static <T> Response<T> success(T data) {
-        return success(HttpStatus.OK.reasonPhrase(), data);
-    }
-
-    /**
-     * 成功响应, 使用 {@link HttpStatus#OK} 状态码, 指定消息和数据.
-     *
-     * @param message 消息
-     * @param data    数据
-     * @return {@link Response}
-     */
-    public static <T> Response<T> success(String message, T data) {
-        return of(HttpStatus.OK.value(), message, data);
-    }
-
-    /**
-     * 失败响应, 使用 {@link HttpStatus#INTERNAL_SERVER_ERROR}, 数据为 {@code null}.
-     *
-     * @return {@link Response}
-     */
-    public static <T> Response<T> fail() {
-        return fail(HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase());
-    }
-
-    /**
      * 失败响应, 使用 {@link HttpStatus#INTERNAL_SERVER_ERROR} 状态码, 指定消息, 数据为 {@code null}.
      *
      * @param message 消息
@@ -119,16 +68,6 @@ public record Response<T>(int code, String message, T data) {
     }
 
     /**
-     * {@link HttpStatus#BAD_REQUEST} 响应, 指定消息, 数据为 {@code null}.
-     *
-     * @param message 消息
-     * @return {@link Response}
-     */
-    public static <T> Response<T> badRequest(String message) {
-        return of(HttpStatus.BAD_REQUEST.value(), message);
-    }
-
-    /**
      * {@link HttpStatus#UNAUTHORIZED} 响应, 指定消息, 数据为 {@code null}.
      *
      * @param message 消息
@@ -146,35 +85,5 @@ public record Response<T>(int code, String message, T data) {
      */
     public static <T> Response<T> forbidden(String message) {
         return of(HttpStatus.FORBIDDEN.value(), message);
-    }
-
-    /**
-     * {@link HttpStatus#NOT_FOUND} 响应, 指定消息, 数据为 {@code null}.
-     *
-     * @param message 消息
-     * @return {@link Response}
-     */
-    public static <T> Response<T> notFound(String message) {
-        return of(HttpStatus.NOT_FOUND.value(), message);
-    }
-
-    /**
-     * 判断是否为成功响应.
-     *
-     * @return {@code boolean}
-     */
-    @JsonIgnore
-    public boolean isSuccess() {
-        return code >= 200 && code < 300;
-    }
-
-    /**
-     * 判断是否为失败响应.
-     *
-     * @return {@code boolean}
-     */
-    @JsonIgnore
-    public boolean isFail() {
-        return !isSuccess();
     }
 }

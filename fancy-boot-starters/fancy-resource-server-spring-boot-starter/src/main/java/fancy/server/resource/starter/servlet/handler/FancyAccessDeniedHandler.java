@@ -36,6 +36,6 @@ public class FancyAccessDeniedHandler implements AccessDeniedHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8);
 
-        jsonMapper.writeValue(response.getOutputStream(), Response.fail(HttpServletResponse.SC_FORBIDDEN, message));
+        jsonMapper.writeValue(response.getOutputStream(), Response.forbidden(message));
     }
 }

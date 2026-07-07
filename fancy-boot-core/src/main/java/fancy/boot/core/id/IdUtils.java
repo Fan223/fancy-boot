@@ -1,5 +1,7 @@
-package fancy.boot.core.util;
+package fancy.boot.core.id;
 
+import fancy.boot.core.net.NetUtils;
+import fancy.boot.core.system.ProcessUtils;
 import lombok.experimental.UtilityClass;
 
 /**

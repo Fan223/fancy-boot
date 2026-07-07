@@ -1,7 +1,7 @@
 package fancy.mybatis.plus.starter.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import fancy.boot.core.util.IdUtils;
+import fancy.boot.core.id.IdUtils;
 import fancy.mybatis.plus.starter.entity.MetaDO;
 import fancy.mybatis.plus.starter.util.LambdaUtils;
 import org.apache.ibatis.reflection.MetaObject;

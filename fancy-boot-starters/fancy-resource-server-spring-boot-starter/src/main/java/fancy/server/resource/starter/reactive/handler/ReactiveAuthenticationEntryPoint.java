@@ -44,7 +44,7 @@ public class ReactiveAuthenticationEntryPoint implements ServerAuthenticationEnt
         headers.setAcceptCharset(List.of(StandardCharsets.UTF_8));
         headers.set(HttpHeaders.WWW_AUTHENTICATE, message);
 
-        byte[] body = jsonMapper.writeValueAsBytes(Response.fail(HttpStatus.UNAUTHORIZED.value(), message));
+        byte[] body = jsonMapper.writeValueAsBytes(Response.unauthorized(message));
         DataBuffer buffer = response.bufferFactory().wrap(body);
         return response.writeWith(Mono.just(buffer));
     }

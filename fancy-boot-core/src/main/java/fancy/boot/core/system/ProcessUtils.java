@@ -1,4 +1,4 @@
-package fancy.boot.core.util;
+package fancy.boot.core.system;
 
 import lombok.experimental.UtilityClass;
 

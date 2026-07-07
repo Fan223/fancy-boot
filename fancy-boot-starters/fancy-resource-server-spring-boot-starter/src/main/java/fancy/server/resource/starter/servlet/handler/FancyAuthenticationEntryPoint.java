@@ -38,6 +38,6 @@ public class FancyAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setCharacterEncoding(StandardCharsets.UTF_8);
         response.setHeader(HttpHeaders.WWW_AUTHENTICATE, message);
 
-        jsonMapper.writeValue(response.getOutputStream(), Response.fail(HttpServletResponse.SC_UNAUTHORIZED, message));
+        jsonMapper.writeValue(response.getOutputStream(), Response.unauthorized(message));
     }
 }

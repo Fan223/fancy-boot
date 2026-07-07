@@ -1,4 +1,4 @@
-package fancy.boot.core.util;
+package fancy.boot.core.id;
 
 import java.util.concurrent.atomic.AtomicLong;
 
