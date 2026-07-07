@@ -18,5 +18,9 @@
         <module>fancy-redis-spring-boot-starter</module>
         <module>fancy-jackson-spring-boot-starter</module>
         <module>fancy-resource-server-spring-boot-starter</module>
+        <module>fancy-validation-spring-boot-starter</module>
+        <module>fancy-web-spring-boot-starter</module>
+        <module>fancy-datasource-spring-boot-starter</module>
+        <module>fancy-admin-client-spring-boot-starter</module>
     </modules>
 </project>

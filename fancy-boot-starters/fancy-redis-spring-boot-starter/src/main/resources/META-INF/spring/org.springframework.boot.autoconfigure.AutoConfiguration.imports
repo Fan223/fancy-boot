@@ -1,1 +1,1 @@
-fancy.redis.starter.autoconfigure.FancyRedisAutoConfiguration
+fancy.redis.starter.autoconfigure.RedisAutoConfiguration

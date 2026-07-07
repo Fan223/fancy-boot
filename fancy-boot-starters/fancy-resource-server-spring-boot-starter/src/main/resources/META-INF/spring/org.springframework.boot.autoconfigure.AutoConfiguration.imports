@@ -1,1 +1,9 @@
-fancy.resource.server.starter.autoconfigure.FancyResourceServerAutoConfiguration
+fancy.server.resource.starter.autoconfigure.servlet.ResourceServerAutoConfiguration
+fancy.server.resource.starter.servlet.configurer.ResourceServerConfigurer
+fancy.server.resource.starter.servlet.handler.FancyAuthenticationEntryPoint
+fancy.server.resource.starter.servlet.handler.FancyAccessDeniedHandler
+
+fancy.server.resource.starter.autoconfigure.reactive.ReactiveResourceServerAutoConfiguration
+fancy.server.resource.starter.reactive.configurer.ReactiveResourceServerConfigurer
+fancy.server.resource.starter.reactive.handler.ReactiveAuthenticationEntryPoint
+fancy.server.resource.starter.reactive.handler.ReactiveAccessDeniedHandler
