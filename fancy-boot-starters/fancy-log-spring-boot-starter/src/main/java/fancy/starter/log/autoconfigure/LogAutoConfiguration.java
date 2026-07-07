@@ -1,0 +1,70 @@
+package fancy.starter.log.autoconfigure;
+
+import fancy.starter.log.aspect.ControllerLogAspect;
+import fancy.starter.log.aspect.LogAdvice;
+import fancy.starter.log.aspect.LogAspect;
+import fancy.starter.log.filter.TraceIdFilter;
+import fancy.starter.log.printer.LogPrinter;
+import fancy.starter.log.properties.LogProperties;
+import jakarta.servlet.DispatcherType;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.Ordered;
+import org.springframework.core.env.Environment;
+
+/**
+ * 日志自动配置类.
+ *
+ * @author Fan
+ */
+@AutoConfiguration
+@EnableConfigurationProperties(LogProperties.class)
+@RequiredArgsConstructor
+@ConditionalOnWebApplication
+public class LogAutoConfiguration {
+
+    private final LogProperties properties;
+
+    private final Environment environment;
+
+    @Bean
+    @ConditionalOnMissingBean
+    public LogPrinter logPrinter() {
+        return new LogPrinter(environment);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public LogAdvice logAdvice(LogPrinter printer) {
+        return new LogAdvice(properties, printer);
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    public LogAspect logAspect(LogAdvice logAdvice) {
+        return new LogAspect(properties, logAdvice);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ControllerLogAspect controllerLogAspect(LogAdvice logAdvice) {
+        return new ControllerLogAspect(properties, logAdvice);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public FilterRegistrationBean<TraceIdFilter> traceIdFilterRegistrationBean() {
+        FilterRegistrationBean<TraceIdFilter> bean = new FilterRegistrationBean<>();
+        bean.setFilter(new TraceIdFilter());
+        bean.addUrlPatterns("/*");
+        bean.setDispatcherTypes(DispatcherType.REQUEST);
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
+    }
+}

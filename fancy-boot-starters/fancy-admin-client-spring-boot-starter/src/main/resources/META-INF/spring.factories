@@ -1,2 +1,2 @@
 org.springframework.boot.EnvironmentPostProcessor=\
-    fancy.client.admin.starter.bootstrap.AdminClientEnvironmentPostProcessor
+    fancy.starter.client.admin.bootstrap.AdminClientEnvironmentPostProcessor

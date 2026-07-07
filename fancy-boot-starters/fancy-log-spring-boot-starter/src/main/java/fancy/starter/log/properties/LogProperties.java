@@ -1,0 +1,77 @@
+package fancy.starter.log.properties;
+
+import fancy.starter.log.annotation.Log;
+import fancy.starter.log.aspect.ControllerLogAspect;
+import fancy.starter.log.aspect.LogAspect;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+/**
+ * 日志配置, 用于 {@link LogAspect} 和 {@link ControllerLogAspect}.
+ *
+ * @author Fan
+ */
+@Getter
+@Setter
+@ConfigurationProperties(prefix = "fancy.log")
+public class LogProperties {
+
+    /**
+     * 全局总开关.
+     */
+    private boolean enabled = true;
+
+    /**
+     * {@link LogAspect} 配置.
+     */
+    private Annotation annotation = new Annotation();
+
+    /**
+     * {@link ControllerLogAspect} 配置.
+     */
+    private Controller controller = new Controller();
+
+    /**
+     * 服务名.
+     */
+    private String serviceName;
+
+    /**
+     * 是否打印参数.
+     */
+    private boolean printArgs = true;
+
+    /**
+     * 最大参数长度.
+     */
+    private int maxArgsLength = 2048;
+
+    /**
+     * 是否打印返回结果.
+     */
+    private boolean printResult = true;
+
+    /**
+     * 最大返回结果长度.
+     */
+    private int maxResultLength = 2048;
+
+    @Getter
+    @Setter
+    public static class Annotation {
+        /**
+         * 是否启用 {@link Log} 切面.
+         */
+        private boolean enabled = true;
+    }
+
+    @Getter
+    @Setter
+    public static class Controller {
+        /**
+         * 是否启用 Controller 切面.
+         */
+        private boolean enabled = true;
+    }
+}
