@@ -1,5 +1,7 @@
 package fancy.starter.datasource.model;
 
+import java.util.Map;
+
 /**
  * 数据源模型.
  *
@@ -16,6 +18,9 @@ public record DataSourceModel(
 
         String username,
 
-        String password
+        String password,
+
+        // 数据源属性
+        Map<String, Object> properties
 ) {
 }

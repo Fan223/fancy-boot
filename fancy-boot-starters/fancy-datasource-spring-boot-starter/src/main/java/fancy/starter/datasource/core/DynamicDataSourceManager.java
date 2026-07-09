@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -85,6 +86,13 @@ public class DynamicDataSourceManager {
         ds.setJdbcUrl(model.url());
         ds.setUsername(model.username());
         ds.setPassword(model.password());
+
+        Map<String, Object> properties = model.properties();
+        if (properties != null && !properties.isEmpty()) {
+            Properties props = new Properties();
+            props.putAll(properties);
+            ds.setDataSourceProperties(props);
+        }
         return ds;
     }
 
@@ -141,5 +149,15 @@ public class DynamicDataSourceManager {
      */
     public DataSource get(String code) {
         return datasourceMap.get(code);
+    }
+
+    /**
+     * 获取数据源模型.
+     *
+     * @param code 数据源唯一标识码
+     * @return {@link DataSourceModel}
+     */
+    public DataSourceModel getModel(String code) {
+        return modelMap.get(code);
     }
 }
