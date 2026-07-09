@@ -9,6 +9,5 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
  *
  * @author Fan
  */
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 public interface ReactiveAuthorizeCustomizer extends Customizer<ServerHttpSecurity.AuthorizeExchangeSpec> {
 }

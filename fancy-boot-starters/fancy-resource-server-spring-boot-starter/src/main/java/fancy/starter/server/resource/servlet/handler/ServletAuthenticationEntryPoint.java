@@ -24,14 +24,14 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @AllArgsConstructor
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-public class FancyAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class ServletAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final JsonMapper jsonMapper;
 
     @Override
     public void commence(@NonNull HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         String message = authException.getMessage();
-        log.error("FancyAuthenticationEntryPoint: {}", message);
+        log.warn("ServletAuthenticationEntryPoint: {}", message);
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

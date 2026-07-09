@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 /**
  * {@link ConditionalOnWebApplication.Type#REACTIVE} 拒绝访问处理器.
@@ -34,14 +33,13 @@ public class ReactiveAccessDeniedHandler implements ServerAccessDeniedHandler {
     @Override
     public @NonNull Mono<Void> handle(ServerWebExchange exchange, AccessDeniedException denied) {
         String message = denied.getMessage();
-        log.error("ReactiveAccessDeniedHandler: {}", message);
+        log.warn("ReactiveAccessDeniedHandler: {}", message);
 
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.FORBIDDEN);
 
         HttpHeaders headers = response.getHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAcceptCharset(List.of(StandardCharsets.UTF_8));
+        headers.setContentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8));
 
         byte[] body = jsonMapper.writeValueAsBytes(Response.forbidden(message));
         DataBuffer buffer = response.bufferFactory().wrap(body);

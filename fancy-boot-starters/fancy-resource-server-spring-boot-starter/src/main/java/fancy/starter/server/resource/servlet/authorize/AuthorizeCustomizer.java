@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configurers.AuthorizeH
  *
  * @author Fan
  */
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public interface AuthorizeCustomizer extends Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>
         .AuthorizationManagerRequestMatcherRegistry> {
 }

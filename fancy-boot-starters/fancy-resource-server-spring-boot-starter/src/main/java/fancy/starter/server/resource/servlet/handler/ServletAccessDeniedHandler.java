@@ -23,14 +23,14 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @AllArgsConstructor
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-public class FancyAccessDeniedHandler implements AccessDeniedHandler {
+public class ServletAccessDeniedHandler implements AccessDeniedHandler {
 
     private final JsonMapper jsonMapper;
 
     @Override
     public void handle(@NonNull HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
         String message = accessDeniedException.getMessage();
-        log.error("FancyAccessDeniedHandler: {}", message);
+        log.warn("ServletAccessDeniedHandler: {}", message);
 
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
