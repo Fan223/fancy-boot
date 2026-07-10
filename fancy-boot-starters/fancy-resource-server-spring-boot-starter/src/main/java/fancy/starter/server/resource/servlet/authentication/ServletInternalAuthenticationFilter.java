@@ -1,12 +1,14 @@
 package fancy.starter.server.resource.servlet.authentication;
 
 import fancy.boot.core.lang.StringUtils;
+import fancy.starter.server.resource.authentication.InternalAuthenticationToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -15,12 +17,13 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 /**
- * 内部认证过滤器, 在 JWT 校验前运行. 当请求携带正确的 X-Internal-Token 时注入内部认证, 实现服务间内部调用免 JWT 认证.
+ * {@link ConditionalOnWebApplication.Type#SERVLET} 内部认证过滤器, 在 JWT 校验前运行.
+ * 当请求携带正确的 X-Internal-Token 时注入内部认证, 实现服务间内部调用免 JWT 认证.
  *
  * @author Fan
  */
 @RequiredArgsConstructor
-public class InternalAuthenticationFilter extends OncePerRequestFilter {
+public class ServletInternalAuthenticationFilter extends OncePerRequestFilter {
 
     private static final String INTERNAL_TOKEN_HEADER = "X-Internal-Token";
 

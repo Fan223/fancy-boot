@@ -1,19 +1,23 @@
 package fancy.starter.server.resource.autoconfigure.reactive;
 
-import fancy.starter.server.resource.properties.SecurityProperties;
+import fancy.starter.server.resource.cors.CorsConfigurer;
+import fancy.starter.server.resource.properties.ResourceServerProperties;
+import fancy.starter.server.resource.reactive.authentication.ReactiveInternalAuthenticationFilter;
 import fancy.starter.server.resource.reactive.authorize.ReactiveAuthorizeCustomizer;
 import fancy.starter.server.resource.reactive.configurer.ReactiveResourceServerConfigurer;
+import fancy.starter.server.resource.reactive.handler.ReactiveAccessDeniedHandler;
+import fancy.starter.server.resource.reactive.handler.ReactiveAuthenticationEntryPoint;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -26,9 +30,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import reactor.core.publisher.Mono;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
- * {@link ConditionalOnWebApplication.Type#REACTIVE} 资源服务器自动配置类..
+ * {@link ConditionalOnWebApplication.Type#REACTIVE} 资源服务器自动配置类.
  *
  * @author Fan
  */
@@ -36,32 +41,47 @@ import reactor.core.publisher.Mono;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
-@EnableConfigurationProperties(SecurityProperties.class)
+@EnableConfigurationProperties(ResourceServerProperties.class)
 @AllArgsConstructor
 public class ReactiveResourceServerAutoConfiguration {
 
-    private SecurityProperties securityProperties;
+    private ResourceServerProperties resourceServerProperties;
 
     private ObjectProvider<ReactiveAuthorizeCustomizer> authorizeCustomizers;
 
     @Bean
     @ConditionalOnMissingBean
-    SecurityWebFilterChain defaultReactiveResourceServerSecurityFilterChain(
+    SecurityWebFilterChain defaultResourceServerSecurityWebFilterChain(
             ServerHttpSecurity http,
-            ReactiveResourceServerConfigurer resourceServerConfigurer
+            ReactiveAuthenticationEntryPoint authenticationEntryPoint,
+            ReactiveAccessDeniedHandler accessDeniedHandler,
+            Converter<Jwt, Mono<AbstractAuthenticationToken>> reactiveJwtAuthenticationConverter,
+            ObjectProvider<ReactiveInternalAuthenticationFilter> internalAuthenticationFilterProvider
     ) {
-        // 应用资源服务器配置
-        resourceServerConfigurer.configure(http);
-        // 跨域配置
-        http.cors(Customizer.withDefaults());
-        http.authorizeExchange(spec -> {
-            // 应用所有自定义的授权配置器
-            authorizeCustomizers.orderedStream()
-                    .forEach(customizer -> customizer.customize(spec));
-            // 其他请求都需要认证
-            spec.anyExchange().authenticated();
-        });
+        // 应用资源服务器默认配置
+        ReactiveResourceServerConfigurer.applyDefaults(http, authenticationEntryPoint, accessDeniedHandler, reactiveJwtAuthenticationConverter, authorizeCustomizers, internalAuthenticationFilterProvider);
+        // 其他请求都需要认证
+        http.authorizeExchange(spec -> spec.anyExchange().authenticated());
         return http.build();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ReactiveAuthenticationEntryPoint reactiveAuthenticationEntryPoint(JsonMapper jsonMapper) {
+        return new ReactiveAuthenticationEntryPoint(jsonMapper);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ReactiveAccessDeniedHandler reactiveAccessDeniedHandler(JsonMapper jsonMapper) {
+        return new ReactiveAccessDeniedHandler(jsonMapper);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "fancy.security.internal-token", name = "token")
+    public ReactiveInternalAuthenticationFilter reactiveInternalAuthenticationFilter() {
+        return new ReactiveInternalAuthenticationFilter(resourceServerProperties.getInternalToken().getToken());
     }
 
     @Bean
@@ -81,7 +101,7 @@ public class ReactiveResourceServerAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public Converter<Jwt, Mono<AbstractAuthenticationToken>> reactiveJwtAuthenticationConverter() {
-        SecurityProperties.Jwt jwt = securityProperties.getJwt();
+        ResourceServerProperties.Jwt jwt = resourceServerProperties.getJwt();
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         // 设置解析权限信息的前缀, 为空则是去掉前缀
         grantedAuthoritiesConverter.setAuthorityPrefix(jwt.getAuthorityPrefix());
@@ -96,14 +116,7 @@ public class ReactiveResourceServerAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public CorsWebFilter corsWebFilter() {
-        SecurityProperties.Cors cors = securityProperties.getCors();
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(cors.getAllowedOrigins());
-        corsConfiguration.setAllowedMethods(cors.getAllowedMethods());
-        corsConfiguration.setAllowedHeaders(cors.getAllowedHeaders());
-        corsConfiguration.setAllowCredentials(cors.isAllowCredentials());
-        corsConfiguration.setMaxAge(cors.getMaxAge());
-
+        CorsConfiguration corsConfiguration = CorsConfigurer.buildConfiguration(resourceServerProperties.getCors());
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsWebFilter(source);

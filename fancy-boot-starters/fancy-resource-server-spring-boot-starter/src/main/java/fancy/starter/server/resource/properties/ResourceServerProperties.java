@@ -7,14 +7,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.List;
 
 /**
- * 资源服务器安全配置, 绑定 {@code fancy.security.*} 命名空间.
+ * 资源服务器配置, 绑定 {@code fancy.security.*} 命名空间.
  *
  * @author Fan
  */
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "fancy.security")
-public class SecurityProperties {
+public class ResourceServerProperties {
 
     /**
      * JWT 解析配置.

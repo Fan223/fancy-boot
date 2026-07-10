@@ -10,6 +10,6 @@ import org.springframework.security.config.annotation.web.configurers.AuthorizeH
  *
  * @author Fan
  */
-public interface AuthorizeCustomizer extends Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>
+public interface ServletAuthorizeCustomizer extends Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>
         .AuthorizationManagerRequestMatcherRegistry> {
 }

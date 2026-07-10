@@ -1,4 +1,4 @@
-package fancy.starter.server.resource.servlet.authentication;
+package fancy.starter.server.resource.authentication;
 
 import lombok.EqualsAndHashCode;
 import org.jspecify.annotations.Nullable;
@@ -17,11 +17,11 @@ import java.util.Collection;
 public class InternalAuthenticationToken extends AbstractAuthenticationToken {
 
     @Serial
-    private static final long serialVersionUID = -9026796118649268020L;
+    private static final long serialVersionUID = -2373919267041362635L;
 
-    private final @Nullable Object principal;
+    private final transient Object principal;
 
-    public InternalAuthenticationToken(@Nullable Object principal) {
+    public InternalAuthenticationToken(Object principal) {
         super((Collection<? extends GrantedAuthority>) null);
         this.principal = principal;
         super.setAuthenticated(true);
