@@ -1,5 +1,6 @@
 package fancy.starter.redis.autoconfigure;
 
+import fancy.starter.redis.service.RedisService;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.JsonJackson3Codec;
@@ -62,5 +63,13 @@ public class RedisAutoConfiguration {
         // 初始化
         template.afterPropertiesSet();
         return template;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public RedisService redisService(RedisTemplate<String, Object> redisTemplate,
+                                     RedissonClient redissonClient,
+                                     JsonMapper jsonMapper) {
+        return new RedisService(redisTemplate, redissonClient, jsonMapper);
     }
 }

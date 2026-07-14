@@ -1,5 +1,7 @@
 package fancy.starter.redis.service;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.*;
 import org.springframework.data.redis.core.RedisTemplate;
 import tools.jackson.databind.json.JsonMapper;
@@ -13,6 +15,8 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Fan
  */
+@Slf4j
+@AllArgsConstructor
 public class RedisService {
 
     private final RedisTemplate<String, Object> redisTemplate;
@@ -20,12 +24,6 @@ public class RedisService {
     private final RedissonClient redissonClient;
 
     private final JsonMapper jsonMapper;
-
-    public RedisService(RedisTemplate<String, Object> redisTemplate, RedissonClient redissonClient, JsonMapper jsonMapper) {
-        this.redisTemplate = redisTemplate;
-        this.redissonClient = redissonClient;
-        this.jsonMapper = jsonMapper;
-    }
 
     /**
      * 判断 Key 是否存在.
@@ -289,7 +287,7 @@ public class RedisService {
      * @param key    {@link String}
      * @param values 元素
      */
-    public final void sAdd(String key, Object... values) {
+    public void sAdd(String key, Object... values) {
         redisTemplate.opsForSet().add(key, values);
     }
 
@@ -391,7 +389,8 @@ public class RedisService {
         RLock lock = getLock(lockKey);
         try {
             return lock.tryLock(time, unit);
-        } catch (InterruptedException _) {
+        } catch (InterruptedException e) {
+            log.warn("尝试获取分布式锁被中断, lockKey: {}", lockKey, e);
             Thread.currentThread().interrupt();
             return false;
         }
@@ -410,7 +409,8 @@ public class RedisService {
         RLock lock = redissonClient.getLock(lockKey);
         try {
             return lock.tryLock(waitTime, leaseTime, unit);
-        } catch (InterruptedException _) {
+        } catch (InterruptedException e) {
+            log.warn("尝试获取分布式锁被中断, lockKey: {}", lockKey, e);
             Thread.currentThread().interrupt();
             return false;
         }

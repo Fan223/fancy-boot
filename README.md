@@ -147,10 +147,10 @@ public class UserController {
 
 - [docs/web.md](docs/web.md) —— 统一响应、异常处理、参数校验
 - [docs/log.md](docs/log.md) —— 日志组件使用
+- [docs/jackson.md](docs/jackson.md) —— Jackson 配置说明
 - [docs/mybatis-plus.md](docs/mybatis-plus.md) —— MyBatis-Plus 与代码生成
 - [docs/resource-server.md](docs/resource-server.md) —— OAuth2 资源服务器
-- [docs/jackson.md](docs/jackson.md) —— Jackson 配置说明 _(待补充)_
-- [docs/redis.md](docs/redis.md) —— Redis 服务与分布式锁 _(待补充)_
+- [docs/redis.md](docs/redis.md) —— Redis 服务与分布式锁
 - [docs/datasource.md](docs/datasource.md) —— 动态数据源 _(待补充)_
 
 > AI 工具请同时阅读根目录 [AGENTS.md](AGENTS.md) 获取项目约定与硬性约束。
