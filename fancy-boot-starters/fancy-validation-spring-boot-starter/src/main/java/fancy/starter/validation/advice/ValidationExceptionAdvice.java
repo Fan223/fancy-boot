@@ -1,27 +1,29 @@
 package fancy.starter.validation.advice;
 
+import fancy.boot.core.http.HttpStatus;
 import fancy.boot.core.http.Response;
+import fancy.starter.validation.model.FieldErrorDetail;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * 参数校验异常处理.
  *
  * @author Fan
  */
-@ControllerAdvice
+@Slf4j
 @RestControllerAdvice
 public class ValidationExceptionAdvice {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ValidationExceptionAdvice.class);
 
     /**
      * {@link ConstraintViolationException} 处理, 简单参数校验.
@@ -30,10 +32,19 @@ public class ValidationExceptionAdvice {
      * @return {@link Response}
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public Response<String> handleConstraintViolationException(ConstraintViolationException exception) {
-        String message = exception.getConstraintViolations().iterator().next().getMessage();
-        LOGGER.error("简单参数校验失败: {}", message, exception);
-        return Response.fail("简单参数校验失败: " + message);
+    public Response<List<FieldErrorDetail>> handleConstraintViolationException(ConstraintViolationException exception) {
+        Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();
+
+        String message = "简单参数校验失败";
+        log.warn("{}: {}", message, violations);
+        if (log.isDebugEnabled()) {
+            log.debug("{}堆栈", message, exception);
+        }
+
+        List<FieldErrorDetail> details = violations.stream().map(violation -> new FieldErrorDetail(
+                        violation.getPropertyPath().toString(), violation.getMessage(), violation.getInvalidValue()))
+                .toList();
+        return Response.of(HttpStatus.BAD_REQUEST, message, details);
     }
 
     /**
@@ -43,14 +54,16 @@ public class ValidationExceptionAdvice {
      * @return {@link Response}
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Response<String> handleMethodArgumentNotValid(MethodArgumentNotValidException exception) {
-        String message = "实体类参数校验失败: ";
-        FieldError fieldError = exception.getBindingResult().getFieldError();
-        if (fieldError != null) {
-            message += fieldError.getDefaultMessage();
-        }
-        LOGGER.error(message, exception);
-        return Response.fail(message);
+    public Response<List<FieldErrorDetail>> handleMethodArgumentNotValid(MethodArgumentNotValidException exception) {
+        List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
+
+        String message = "实体类参数校验失败";
+        logFieldErrors(message, fieldErrors, exception);
+        List<FieldErrorDetail> details = fieldErrors.stream()
+                .map(fieldError -> new FieldErrorDetail(
+                        fieldError.getField(), fieldError.getDefaultMessage(), fieldError.getRejectedValue()))
+                .toList();
+        return Response.of(HttpStatus.BAD_REQUEST, message, details);
     }
 
     /**
@@ -60,14 +73,16 @@ public class ValidationExceptionAdvice {
      * @return {@link Response}
      */
     @ExceptionHandler(BindException.class)
-    public Response<String> handleBindException(BindException exception) {
-        String message = "表单参数绑定失败: ";
-        FieldError fieldError = exception.getFieldError();
-        if (fieldError != null) {
-            message += fieldError.getDefaultMessage();
-        }
-        LOGGER.error(message, exception);
-        return Response.fail(message);
+    public Response<List<FieldErrorDetail>> handleBindException(BindException exception) {
+        List<FieldError> fieldErrors = exception.getFieldErrors();
+
+        String message = "表单参数绑定失败";
+        logFieldErrors(message, fieldErrors, exception);
+        List<FieldErrorDetail> details = fieldErrors.stream()
+                .map(fieldError -> new FieldErrorDetail(
+                        fieldError.getField(), fieldError.getDefaultMessage(), fieldError.getRejectedValue()))
+                .toList();
+        return Response.of(HttpStatus.BAD_REQUEST, message, details);
     }
 
     /**
@@ -77,9 +92,23 @@ public class ValidationExceptionAdvice {
      * @return {@link Response}
      */
     @ExceptionHandler(HandlerMethodValidationException.class)
-    public Response<String> handleMethodValidationException(HandlerMethodValidationException exception) {
-        String message = exception.getAllErrors().getFirst().getDefaultMessage();
-        LOGGER.error("方法参数校验失败: {}", message, exception);
-        return Response.fail("方法参数校验失败: " + message);
+    public Response<List<FieldErrorDetail>> handleMethodValidationException(HandlerMethodValidationException exception) {
+        List<FieldErrorDetail> details = exception.getAllErrors().stream()
+                .map(resolvable -> new FieldErrorDetail(null, resolvable.getDefaultMessage(), null))
+                .toList();
+
+        String message = "方法参数校验失败";
+        log.warn("{}: {}", message, details);
+        if (log.isDebugEnabled()) {
+            log.debug("{}堆栈", message, exception);
+        }
+        return Response.of(HttpStatus.BAD_REQUEST, message, details);
+    }
+
+    private void logFieldErrors(String message, List<FieldError> fieldErrors, Throwable exception) {
+        log.warn("{}: {}", message, fieldErrors);
+        if (log.isDebugEnabled()) {
+            log.debug("{}堆栈", message, exception);
+        }
     }
 }

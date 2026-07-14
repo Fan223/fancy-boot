@@ -5,6 +5,7 @@ import fancy.starter.validation.service.ValidatorService;
 import jakarta.validation.Validator;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -13,17 +14,18 @@ import org.springframework.context.annotation.Bean;
  * @author Fan
  */
 @AutoConfiguration
+@ConditionalOnWebApplication
 public class ValidationAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ValidationExceptionAdvice fancyValidationExceptionAdvice() {
+    public ValidationExceptionAdvice validationExceptionAdvice() {
         return new ValidationExceptionAdvice();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public ValidatorService fancyValidatorService(Validator validator) {
+    public ValidatorService validatorService(Validator validator) {
         return new ValidatorService(validator);
     }
 }
