@@ -4,6 +4,7 @@ import fancy.starter.datasource.core.DynamicDataSourceManager;
 import fancy.starter.datasource.mapper.EncodingColumnMapRowMapper;
 import fancy.starter.datasource.model.DataSourceModel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,6 +19,7 @@ import java.util.Map;
  *
  * @author Fan
  */
+@Slf4j
 @RequiredArgsConstructor
 public class JdbcDynamicSqlExecutor implements DynamicSqlExecutor {
 
@@ -74,12 +76,13 @@ public class JdbcDynamicSqlExecutor implements DynamicSqlExecutor {
 
         try {
             return new EncodingColumnMapRowMapper(Charset.forName(charset));
-        } catch (Exception _) {
+        } catch (Exception e) {
+            log.warn("数据源 [{}] 配置的 charset [{}] 非法, 已回退到默认 RowMapper, 请检查 properties.charset", code, charset, e);
             return DEFAULT_ROW_MAPPER;
         }
     }
 
-    public String getCharset(DataSourceModel model) {
+    private String getCharset(DataSourceModel model) {
         Map<String, Object> properties = model.properties();
         if (properties == null) {
             return null;

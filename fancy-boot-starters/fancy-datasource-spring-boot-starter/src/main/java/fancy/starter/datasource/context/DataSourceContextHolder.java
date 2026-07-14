@@ -50,7 +50,7 @@ public class DataSourceContextHolder {
     /**
      * 清除当前线程的上下文栈, 彻底移除 ThreadLocal 中的数据, 避免内存泄漏.
      */
-    public static void clear() {
+    private static void clear() {
         CONTEXT_STACK.remove();
     }
 }

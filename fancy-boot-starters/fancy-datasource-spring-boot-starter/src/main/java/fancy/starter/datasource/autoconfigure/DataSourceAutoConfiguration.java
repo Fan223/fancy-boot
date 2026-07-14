@@ -8,6 +8,7 @@ import fancy.starter.datasource.executor.JdbcDynamicSqlExecutor;
 import fancy.starter.datasource.provider.DataSourceProvider;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Primary;
@@ -24,11 +25,13 @@ import javax.sql.DataSource;
 public class DataSourceAutoConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean
     public DsAspect dsAspect() {
         return new DsAspect();
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public DynamicDataSourceManager dynamicDataSourceManager(ObjectProvider<DataSourceProvider> objectProvider) {
         return new DynamicDataSourceManager(objectProvider);
     }
@@ -42,11 +45,13 @@ public class DataSourceAutoConfiguration {
      */
     @Bean
     @Primary
+    @ConditionalOnMissingBean
     public DataSource dynamicRoutingDataSource(DataSource defaultDataSource, DynamicDataSourceManager manager) {
         return new DynamicRoutingDataSource(defaultDataSource, manager);
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public DynamicSqlExecutor dynamicSqlExecutor(DynamicDataSourceManager manager) {
         return new JdbcDynamicSqlExecutor(manager);
     }

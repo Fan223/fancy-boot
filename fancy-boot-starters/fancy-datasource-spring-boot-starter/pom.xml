@@ -10,6 +10,7 @@
     <artifactId>fancy-datasource-spring-boot-starter</artifactId>
     <packaging>jar</packaging>
     <name>fancy-datasource-spring-boot-starter</name>
+    <description>动态数据源</description>
 
     <dependencies>
         <dependency>

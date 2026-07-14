@@ -151,7 +151,8 @@ public class UserController {
 - [docs/mybatis-plus.md](docs/mybatis-plus.md) —— MyBatis-Plus 与代码生成
 - [docs/resource-server.md](docs/resource-server.md) —— OAuth2 资源服务器
 - [docs/redis.md](docs/redis.md) —— Redis 服务与分布式锁
-- [docs/datasource.md](docs/datasource.md) —— 动态数据源 _(待补充)_
+- [docs/datasource.md](docs/datasource.md) —— 动态数据源
+- [docs/admin-client.md](docs/admin-client.md) —— Spring Boot Admin Client
 
 > AI 工具请同时阅读根目录 [AGENTS.md](AGENTS.md) 获取项目约定与硬性约束。
 
