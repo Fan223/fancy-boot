@@ -25,13 +25,25 @@ import java.nio.file.Paths;
 @UtilityClass
 public class WebUtils {
 
-    public static File check(String filepath) throws IOException {
+    /**
+     * 规范化路径并解析为真实路径, 防止路径穿越攻击.
+     *
+     * @param filepath 文件路径
+     * @return {@link File}
+     */
+    public static File normalize(String filepath) throws IOException {
         Path safePath = Paths.get(filepath)
                 .normalize()
                 .toRealPath();
         return safePath.toFile();
     }
 
+    /**
+     * 下载文件.
+     *
+     * @param file     {@link File}
+     * @param response {@link HttpServletResponse}
+     */
     public static void download(File file, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 

@@ -3,6 +3,7 @@ package fancy.starter.web.autoconfigure;
 import fancy.starter.web.advice.GlobalExceptionAdvice;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -10,18 +11,18 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
-
 /**
  * Web 自动配置类.
  *
  * @author Fan
  */
 @AutoConfiguration
+@ConditionalOnWebApplication
 public class WebAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public GlobalExceptionAdvice fancyGlobalExceptionAdvice() {
+    public GlobalExceptionAdvice globalExceptionAdvice() {
         return new GlobalExceptionAdvice();
     }
 
@@ -34,8 +35,8 @@ public class WebAutoConfiguration {
 
     @Bean
     public WebClient.Builder webClientBuilder() {
+        // 配置策略, 取消内存缓冲区大小限制, 但注意超大数据可能造成内存溢出, 超大数据建议使用流式处理
         return WebClient.builder()
-                // 配置策略, 取消内存缓冲区大小限制, 但注意超大数据可能造成内存溢出, 超大数据建议使用流式处理
                 .exchangeStrategies(ExchangeStrategies.builder()
                         .codecs(configurer -> configurer
                                 .defaultCodecs().maxInMemorySize(-1)).build());
