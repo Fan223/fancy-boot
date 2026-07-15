@@ -20,31 +20,6 @@ public class LogPrinter {
     private final Environment environment;
 
     /**
-     * 长度处理.
-     *
-     * @param value     {@link Object}
-     * @param maxLength 最大长度
-     * @return {@link String}
-     */
-    public static String sanitize(Object value, int maxLength) {
-        if (value == null) {
-            return null;
-        }
-
-        String text;
-        if (value.getClass().isArray()) {
-            text = Arrays.deepToString((Object[]) value);
-        } else {
-            text = String.valueOf(value);
-        }
-
-        if (text.length() <= maxLength) {
-            return text;
-        }
-        return text.substring(0, maxLength) + "...";
-    }
-
-    /**
      * 打印日志.
      *
      * @param event {@link LogEvent}
@@ -95,5 +70,30 @@ public class LogPrinter {
             return environment.getProperty("spring.application.name");
         }
         return null;
+    }
+
+    /**
+     * 长度处理.
+     *
+     * @param value     {@link Object}
+     * @param maxLength 最大长度
+     * @return {@link String}
+     */
+    public static String sanitize(Object value, int maxLength) {
+        if (value == null) {
+            return null;
+        }
+
+        String text;
+        if (value.getClass().isArray()) {
+            text = Arrays.deepToString((Object[]) value);
+        } else {
+            text = String.valueOf(value);
+        }
+
+        if (text.length() <= maxLength) {
+            return text;
+        }
+        return text.substring(0, maxLength) + "...";
     }
 }

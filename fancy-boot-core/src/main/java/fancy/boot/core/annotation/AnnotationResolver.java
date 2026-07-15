@@ -17,6 +17,13 @@ import java.lang.reflect.Method;
 @UtilityClass
 public class AnnotationResolver {
 
+    /**
+     * 解析方法或类上的注解.
+     *
+     * @param joinPoint      {@link ProceedingJoinPoint}
+     * @param annotationType {@link Class}
+     * @return {@link A}
+     */
     public static <A extends Annotation> A resolve(ProceedingJoinPoint joinPoint, Class<A> annotationType) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Class<?> targetClass = joinPoint.getTarget().getClass();

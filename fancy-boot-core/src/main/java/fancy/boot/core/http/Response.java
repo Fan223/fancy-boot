@@ -24,18 +24,6 @@ public record Response<T>(int code, String message, T data) {
     }
 
     /**
-     * 返回使用指定 {@link HttpStatus} 创建的 {@link Response} 实例.
-     *
-     * @param status  {@link HttpStatus}
-     * @param message 消息
-     * @param data    数据
-     * @return {@link Response<T>}
-     */
-    public static <T> Response<T> of(HttpStatus status, String message, T data) {
-        return of(status.value(), message, data);
-    }
-
-    /**
      * 返回使用指定状态码和消息创建的 {@link Response} 实例, 数据为 {@code null}.
      *
      * @param code    状态码
@@ -65,7 +53,7 @@ public record Response<T>(int code, String message, T data) {
      * @return {@link Response}
      */
     public static <T> Response<T> fail(String message) {
-        return fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), message);
+        return fail(HttpStatus.INTERNAL_SERVER_ERROR.getValue(), message);
     }
 
     /**
@@ -86,7 +74,7 @@ public record Response<T>(int code, String message, T data) {
      * @return {@link Response}
      */
     public static <T> Response<T> unauthorized(String message) {
-        return of(HttpStatus.UNAUTHORIZED.value(), message);
+        return of(HttpStatus.UNAUTHORIZED.getValue(), message);
     }
 
     /**
@@ -96,6 +84,6 @@ public record Response<T>(int code, String message, T data) {
      * @return {@link Response}
      */
     public static <T> Response<T> forbidden(String message) {
-        return of(HttpStatus.FORBIDDEN.value(), message);
+        return of(HttpStatus.FORBIDDEN.getValue(), message);
     }
 }

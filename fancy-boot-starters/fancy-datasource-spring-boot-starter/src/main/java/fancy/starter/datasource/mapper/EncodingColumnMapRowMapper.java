@@ -1,5 +1,6 @@
 package fancy.starter.datasource.mapper;
 
+import lombok.AllArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 
@@ -14,13 +15,10 @@ import java.sql.SQLException;
  *
  * @author Fan
  */
+@AllArgsConstructor
 public class EncodingColumnMapRowMapper extends ColumnMapRowMapper {
 
     private final Charset charset;
-
-    public EncodingColumnMapRowMapper(Charset charset) {
-        this.charset = charset;
-    }
 
     @Override
     protected @Nullable Object getColumnValue(ResultSet rs, int index) throws SQLException {

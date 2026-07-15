@@ -1,11 +1,11 @@
 package fancy.starter.validation.advice;
 
-import fancy.boot.core.http.HttpStatus;
 import fancy.boot.core.http.Response;
 import fancy.starter.validation.model.FieldErrorDetail;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -44,7 +44,7 @@ public class ValidationExceptionAdvice {
         List<FieldErrorDetail> details = violations.stream().map(violation -> new FieldErrorDetail(
                         violation.getPropertyPath().toString(), violation.getMessage(), violation.getInvalidValue()))
                 .toList();
-        return Response.of(HttpStatus.BAD_REQUEST, message, details);
+        return Response.of(HttpStatus.BAD_REQUEST.value(), message, details);
     }
 
     /**
@@ -63,7 +63,7 @@ public class ValidationExceptionAdvice {
                 .map(fieldError -> new FieldErrorDetail(
                         fieldError.getField(), fieldError.getDefaultMessage(), fieldError.getRejectedValue()))
                 .toList();
-        return Response.of(HttpStatus.BAD_REQUEST, message, details);
+        return Response.of(HttpStatus.BAD_REQUEST.value(), message, details);
     }
 
     /**
@@ -82,7 +82,7 @@ public class ValidationExceptionAdvice {
                 .map(fieldError -> new FieldErrorDetail(
                         fieldError.getField(), fieldError.getDefaultMessage(), fieldError.getRejectedValue()))
                 .toList();
-        return Response.of(HttpStatus.BAD_REQUEST, message, details);
+        return Response.of(HttpStatus.BAD_REQUEST.value(), message, details);
     }
 
     /**
@@ -102,7 +102,7 @@ public class ValidationExceptionAdvice {
         if (log.isDebugEnabled()) {
             log.debug("{}堆栈", message, exception);
         }
-        return Response.of(HttpStatus.BAD_REQUEST, message, details);
+        return Response.of(HttpStatus.BAD_REQUEST.value(), message, details);
     }
 
     private void logFieldErrors(String message, List<FieldError> fieldErrors, Throwable exception) {

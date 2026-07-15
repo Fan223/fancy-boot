@@ -3,6 +3,7 @@ package fancy.starter.datasource.core;
 import com.zaxxer.hikari.HikariDataSource;
 import fancy.starter.datasource.model.DataSourceModel;
 import fancy.starter.datasource.provider.DataSourceProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -20,12 +21,8 @@ import java.util.stream.Collectors;
  *
  * @author Fan
  */
+@RequiredArgsConstructor
 public class DynamicDataSourceManager {
-
-    /**
-     * 数据源提供者, 通过 {@link ObjectProvider} 获取, 允许在没有 {@link DataSourceProvider} 实现的情况下正常启动应用.
-     */
-    private final ObjectProvider<DataSourceProvider> provider;
 
     /**
      * 数据源缓存.
@@ -38,13 +35,14 @@ public class DynamicDataSourceManager {
     private final Map<String, DataSourceModel> modelMap = new ConcurrentHashMap<>();
 
     /**
+     * 数据源提供者, 通过 {@link ObjectProvider} 获取, 允许在没有 {@link DataSourceProvider} 实现的情况下正常启动应用.
+     */
+    private final ObjectProvider<DataSourceProvider> provider;
+
+    /**
      * 数据源提供者实例, 在 {@link #init()} 方法中通过 {@link ObjectProvider} 获取, 可能为 null, 需要在使用前进行 null 检查.
      */
     private DataSourceProvider dataSourceProvider;
-
-    public DynamicDataSourceManager(ObjectProvider<DataSourceProvider> provider) {
-        this.provider = provider;
-    }
 
     /**
      * 初始化方法, 在 Spring Boot 启动后调用, 通过 {@link ObjectProvider} 获取 {@link DataSourceProvider} 实例,

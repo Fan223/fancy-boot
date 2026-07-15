@@ -1,21 +1,21 @@
 package fancy.starter.datasource.context;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Objects;
 
 /**
- * 数据源上下文.
+ * 动态数据源上下文.
  *
  * @author Fan
  */
+@UtilityClass
 public class DataSourceContextHolder {
 
     // 使用 ThreadLocal 维护一个线程安全的上下文栈, Deque 支持数据源的嵌套压栈/弹栈
     private static final ThreadLocal<Deque<String>> CONTEXT_STACK = ThreadLocal.withInitial(ArrayDeque::new);
-
-    private DataSourceContextHolder() {
-    }
 
     /**
      * 将指定数据源压入当前线程的上下文栈顶.

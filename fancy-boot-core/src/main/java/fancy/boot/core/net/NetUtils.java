@@ -1,6 +1,5 @@
 package fancy.boot.core.net;
 
-import fancy.boot.core.http.NetException;
 import lombok.experimental.UtilityClass;
 
 import java.net.InetAddress;
@@ -49,7 +48,7 @@ public class NetUtils {
             NetworkInterface networkInterface = NetworkInterface.getByInetAddress(addr);
             return null == networkInterface ? null : networkInterface.getHardwareAddress();
         } catch (SocketException e) {
-            throw new NetException("Failed to get hardware address for address: " + addr.getHostAddress(), e);
+            throw new NetException("获取 " + addr.getHostAddress() + " 的硬件地址失败", e);
         }
     }
 }

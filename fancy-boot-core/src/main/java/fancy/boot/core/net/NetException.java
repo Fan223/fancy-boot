@@ -1,4 +1,4 @@
-package fancy.boot.core.http;
+package fancy.boot.core.net;
 
 import java.io.Serial;
 

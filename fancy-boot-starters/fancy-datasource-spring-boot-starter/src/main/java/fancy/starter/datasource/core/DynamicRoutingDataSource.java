@@ -52,7 +52,7 @@ public class DynamicRoutingDataSource extends AbstractRoutingDataSource {
 
         DataSource defaultDs = getResolvedDefaultDataSource();
         if (defaultDs == null) {
-            throw new IllegalStateException("No default DataSource configured in DynamicRoutingDataSource");
+            throw new IllegalStateException("没有配置默认数据源");
         }
         return defaultDs;
     }

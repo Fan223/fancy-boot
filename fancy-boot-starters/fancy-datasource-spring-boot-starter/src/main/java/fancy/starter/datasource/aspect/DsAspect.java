@@ -8,7 +8,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
 /**
- * 数据源切面.
+ * 动态数据源切面.
  *
  * @author Fan
  */

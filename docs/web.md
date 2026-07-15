@@ -204,7 +204,7 @@ public class ExternalService {
 - `fancy.boot.core.lang.CharUtils` —— 字符工具
 - `fancy.boot.core.net.NetUtils` —— 网络工具
 - `fancy.boot.core.system.ProcessUtils` —— 进程工具
-- `fancy.boot.core.http.NetException` —— 网络异常
+- `fancy.boot.core.net.NetException` —— 网络异常
 
 ---
 
