@@ -55,7 +55,7 @@ management:
 ## 行为说明
 
 - **不会自动启动 Admin Server**，仅注册客户端
-- 默认 port 由 `spring-boot-admin-starter-client` 决定（无独立端口）
+- 默认 port 由 `spring-boot-admin-starter-client` 决定（无独立端口，与业务服务共用）
 - 启动后会在日志看到类似：`registered application as application ... with admin server`
 - 通过 `spring.boot.admin.client.period`（默认 10s）周期性上报
 
@@ -126,7 +126,12 @@ public class AdminClientEnvironmentPostProcessor implements EnvironmentPostProce
 - `putIfAbsent` 保证**不覆盖**业务方在 `application.yml` 中的显式配置
 - `addLast` 保证优先级最低，让业务配置优先
 
-通过 `META-INF/spring.factories` 的 `EnvironmentPostProcessor` key 注册到 Spring Boot。
+通过 `META-INF/spring.factories` 的 `EnvironmentPostProcessor` key 注册到 Spring Boot：
+
+```
+org.springframework.boot.EnvironmentPostProcessor=\
+    fancy.starter.client.admin.bootstrap.AdminClientEnvironmentPostProcessor
+```
 
 ---
 
@@ -146,7 +151,8 @@ A：不安全。Actuator 默认端口和应用端口共享，会暴露：
 - `/env` — 环境变量（含密码）
 - `/configprops` — 全部 `@ConfigurationProperties`
 - `/shutdown` — 远程关闭应用
-  生产环境应只暴露必要端点，并加 `spring.security` 鉴权。
+
+生产环境应只暴露必要端点，并加 `spring.security` 鉴权。
 
 **Q：客户端会主动向 Server 推数据吗？**
 A：是的。`spring-boot-admin-client` 通过周期性 HTTP 请求（默认 10s）向 Server 上报实例信息。客户端**不会**等 Server 拉取。

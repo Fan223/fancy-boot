@@ -1,18 +1,19 @@
 # Redis
 
-封装 Spring Data Redis + Redisson，提供统一的 `RedisService` 操作 Redis（Key、5 种数据结构、分布式锁、原子类、布隆过滤器）。
+封装 Spring Data Redis + Redisson，提供统一的 `RedisService` 操作 Redis（Key、String、Hash、List、Set、Sorted
+Set、分布式锁、原子类、布隆过滤器）。
 
 ## 引入
 
 ```xml
-
 <dependency>
     <groupId>fan</groupId>
     <artifactId>fancy-redis-spring-boot-starter</artifactId>
 </dependency>
 ```
 
-> starter 已包含 `redisson-spring-boot-starter` 与 `spring-boot-starter-jackson`。
+> starter 已包含 `redisson-spring-boot-starter`，而 `redisson-spring-boot-starter` 包含了
+`spring-boot-starter-data-redis`。
 
 ### 基础配置
 
@@ -29,8 +30,8 @@ spring:
       database: 0
 ```
 
-> `Redisson` 单机模式自动按上述配置装配，地址形如 `redis://host:port`。  
-> 集群 / Sentinel / Master-Slave 模式需自行扩展 `RedissonClient` Bean。
+> Redisson 单机模式按上述配置自动装配，地址形如 `redis://host:port`。集群 / Sentinel / Master-Slave 模式需自行扩展
+`RedissonClient` Bean。
 
 ---
 
@@ -40,77 +41,58 @@ spring:
 |---------------------------------|----------------------------------|
 | `RedissonClient`                | Redisson 客户端，用于分布式锁、原子类、布隆过滤器    |
 | `RedisTemplate<String, Object>` | Spring Data Redis 模板，统一 JSON 序列化 |
-| `RedisService`                  | 项目封装的高阶 API                      |
+| `RedisService`                  | 项目封装的高阶 API（注入即可使用）              |
 
 序列化器约定：
 
 - Key / HashKey：`StringRedisSerializer`
-- Value / HashValue：`GenericJacksonJsonRedisSerializer`（与 [jackson starter](./jackson.md) 协同）
+- Value / HashValue：`GenericJacksonJsonRedisSerializer`（与 [jackson starter](./jackson.md) 协同，注入 `JsonMapper`）
 
 ---
 
-## RedisService API 速查
+## RedisService API
 
 ### Key 操作
 
 ```java
 redisService.hasKey("user:1");
-redisService.
-
-delete("user:1");
-redisService.
-
-expire("user:1",60);              // 60 秒
-redisService.
-
-expire("user:1",60,TimeUnit.MINUTES);
-redisService.
-
-getExpire("user:1");
+redisService.delete("user:1");
+redisService.expire("user:1", 60);              // 60 秒
+redisService.expire("user:1", 60, TimeUnit.MINUTES);
+redisService.getExpire("user:1");               // 默认单位秒
+redisService.getExpire("user:1", TimeUnit.MINUTES);
 ```
 
 ### String（缓存）
 
 ```java
 // 写
-redisService.set("user:1",user);
-redisService.
-
-set("user:1",user, 60);           // 60 秒过期
-redisService.
-
-set("user:1",user, 1,TimeUnit.HOURS);
+redisService.set("user:1", user);
+redisService.set("user:1", user, 60);          // 60 秒过期
+redisService.set("user:1", user, 1, TimeUnit.HOURS);
 
 // 读
-UserVO user = redisService.get("user:1", UserVO.class);
+UserVO user = redisService.get("user:1", UserVO.class);  // 自动 JSON 反序列化
 ```
 
 ### Hash
 
 ```java
-redisService.hSet("user:1","name","Fan");
-redisService.
-
-hSet("user:1","age",18);
+redisService.hSet("user:1", "name", "Fan");
+redisService.hSet("user:1", "age", 18);
 
 String name = redisService.hGet("user:1", "name", String.class);
 Map<Object, Object> all = redisService.hEntries("user:1");
 
-redisService.
-
-hIncrement("user:1","age",1);
-redisService.
-
-hDel("user:1","name");
+redisService.hIncrement("user:1", "age", 1);
+redisService.hDel("user:1", "name", "age");    // 一次删多个
 ```
 
 ### List
 
 ```java
-redisService.lPush("queue",task);
-redisService.
-
-rPush("queue",task);
+redisService.lPush("queue", task);
+redisService.rPush("queue", task);
 
 Task task = redisService.lPop("queue", Task.class);
 Task tail = redisService.rPop("queue", Task.class);
@@ -119,7 +101,7 @@ Task tail = redisService.rPop("queue", Task.class);
 ### Set
 
 ```java
-redisService.sAdd("tags","java","spring","redis");
+redisService.sAdd("tags", "java", "spring", "redis");
 
 boolean isMember = redisService.sIsMember("tags", "java");
 Set<Object> all = redisService.sMembers("tags");
@@ -129,7 +111,7 @@ Long removed = redisService.sRemove("tags", "java");
 ### Sorted Set
 
 ```java
-redisService.zAdd("ranking",user, 95.5);
+redisService.zAdd("ranking", user, 95.5);
 
 Set<Object> top10 = redisService.zRange("ranking", 0, 9);
 Long rank = redisService.zRank("ranking", user);
@@ -142,12 +124,10 @@ Long rank = redisService.zRank("ranking", user);
 ```java
 // 阻塞等待, 不会自动释放
 redisService.lock("order:lock:1");
-try{
-        // 临界区
-        }finally{
-        redisService.
-
-unlock("order:lock:1");
+try {
+    // 临界区
+} finally {
+    redisService.unlock("order:lock:1");
 }
 
 // 非阻塞, 不等待
@@ -157,10 +137,20 @@ boolean ok = redisService.tryLock("order:lock:1");
 boolean ok = redisService.tryLock("order:lock:1", 3, 30, TimeUnit.SECONDS);
 ```
 
-> `unlock` 内部已校验 `isHeldByCurrentThread`，误调不会抛异常。  
-> `tryLock` 被中断时会恢复中断标志并返回 `false`。
+| 重载                                                         | 行为                                   |
+|------------------------------------------------------------|--------------------------------------|
+| `lock(String)`                                             | 阻塞等待，永不自动释放                          |
+| `tryLock(String)`                                          | 非阻塞，失败立即返回 false                     |
+| `tryLock(String, long, TimeUnit)`                          | 阻塞等待 `time`，不自动释放                    |
+| `tryLock(String, long waitTime, long leaseTime, TimeUnit)` | 阻塞等待 `waitTime`，持锁 `leaseTime` 后自动释放 |
 
-### 直接获取 `RLock`（高级）
+行为细节：
+
+- `unlock` 内部已校验 `isHeldByCurrentThread`，被其他线程持有时不会抛异常，仅忽略
+- 所有 `tryLock` 被中断时会恢复中断标志并返回 `false`
+- `tryLock(String, long, TimeUnit)` 与 `tryLock(String, long, long, TimeUnit)` 的 `waitTime` 参数语义：阻塞等待的最长时间
+
+### 直接获取 `RLock`（高级用法）
 
 ```java
 RLock lock = redisService.getLock("order:lock:1");
@@ -185,18 +175,12 @@ double old = score.addAndGet(1.5);
 
 ```java
 RBloomFilter<Long> filter = redisService.getBloomFilter("user:id:bf");
-filter.
+filter.tryInit(1_000_000L, 0.01);   // 容量 100w, 误判率 1%
+filter.add(123L);
 
-tryInit(1_000_000L,0.01);   // 容量 100w, 误判率 1%
-filter.
-
-add(123L);
-
-if(filter.
-
-contains(123L)){
-        // 可能存在, 继续查 DB
-        }
+if (filter.contains(123L)) {
+    // 可能存在, 继续查 DB
+}
 ```
 
 ---

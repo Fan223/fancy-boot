@@ -47,24 +47,52 @@ public record Response<T>(int code, String message, T data) {
     }
 
     /**
+     * 成功响应, 使用 {@link HttpStatus#OK}, 数据为 {@code null}.
+     *
+     * @return {@link Response<T>}
+     */
+    public static <T> Response<T> success() {
+        return success(null);
+    }
+
+    /**
+     * 成功响应, 使用 {@link HttpStatus#OK}, 指定数据.
+     *
+     * @param data 数据
+     * @return {@link Response}
+     */
+    public static <T> Response<T> success(T data) {
+        return success(HttpStatus.OK.getReasonPhrase(), data);
+    }
+
+    /**
+     * 成功响应, 使用 {@link HttpStatus#OK} 状态码, 指定消息和数据.
+     *
+     * @param message 消息
+     * @param data    数据
+     * @return {@link Response}
+     */
+    public static <T> Response<T> success(String message, T data) {
+        return of(HttpStatus.OK.getValue(), message, data);
+    }
+
+    /**
+     * 失败响应, 使用 {@link HttpStatus#INTERNAL_SERVER_ERROR}, 数据为 {@code null}.
+     *
+     * @return {@link Response}
+     */
+    public static <T> Response<T> fail() {
+        return fail(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+    }
+
+    /**
      * 失败响应, 使用 {@link HttpStatus#INTERNAL_SERVER_ERROR} 状态码, 指定消息, 数据为 {@code null}.
      *
      * @param message 消息
      * @return {@link Response}
      */
     public static <T> Response<T> fail(String message) {
-        return fail(HttpStatus.INTERNAL_SERVER_ERROR.getValue(), message);
-    }
-
-    /**
-     * 失败响应, 指定状态码和消息, 数据为 {@code null}.
-     *
-     * @param code    状态码
-     * @param message 消息
-     * @return {@link Response}
-     */
-    public static <T> Response<T> fail(int code, String message) {
-        return of(code, message);
+        return of(HttpStatus.INTERNAL_SERVER_ERROR.getValue(), message);
     }
 
     /**
