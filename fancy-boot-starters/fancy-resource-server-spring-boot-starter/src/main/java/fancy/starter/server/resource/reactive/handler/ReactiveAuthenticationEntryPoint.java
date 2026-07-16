@@ -25,7 +25,6 @@ import java.nio.charset.StandardCharsets;
  */
 @Slf4j
 @AllArgsConstructor
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 public class ReactiveAuthenticationEntryPoint implements ServerAuthenticationEntryPoint {
 
     private final JsonMapper jsonMapper;

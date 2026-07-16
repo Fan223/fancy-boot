@@ -58,7 +58,7 @@ public class StringUtils {
         }
 
         char first = cs.charAt(0);
-        char changed = CharUtils.toLowerCase(first);
+        char changed = Character.toLowerCase(first);
         if (first == changed) {
             return cs.toString();
         }

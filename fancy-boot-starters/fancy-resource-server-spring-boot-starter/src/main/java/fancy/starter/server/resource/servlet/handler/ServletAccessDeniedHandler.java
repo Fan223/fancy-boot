@@ -22,7 +22,6 @@ import java.nio.charset.StandardCharsets;
  */
 @Slf4j
 @AllArgsConstructor
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class ServletAccessDeniedHandler implements AccessDeniedHandler {
 
     private final JsonMapper jsonMapper;

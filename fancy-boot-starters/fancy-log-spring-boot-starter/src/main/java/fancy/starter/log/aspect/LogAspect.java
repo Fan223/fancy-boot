@@ -24,7 +24,7 @@ public class LogAspect {
     @Around("@within(fancy.starter.log.annotation.Log) || @annotation(fancy.starter.log.annotation.Log)")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         Log log = AnnotationResolver.resolve(joinPoint, Log.class);
-        if (log == null || !properties.isEnabled() || !properties.getAnnotation().isEnabled()) {
+        if (!properties.isEnabled() || !properties.getAnnotation().isEnabled()) {
             return joinPoint.proceed();
         }
         return logAdvice.execute(joinPoint, log);

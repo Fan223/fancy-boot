@@ -3,10 +3,9 @@ package fancy.starter.server.resource.authentication;
 import lombok.EqualsAndHashCode;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serial;
-import java.util.Collection;
+import java.util.Collections;
 
 /**
  * 内部认证 Token.
@@ -22,7 +21,7 @@ public class InternalAuthenticationToken extends AbstractAuthenticationToken {
     private final transient Object principal;
 
     public InternalAuthenticationToken(Object principal) {
-        super((Collection<? extends GrantedAuthority>) null);
+        super(Collections.emptyList());
         this.principal = principal;
         super.setAuthenticated(true);
     }

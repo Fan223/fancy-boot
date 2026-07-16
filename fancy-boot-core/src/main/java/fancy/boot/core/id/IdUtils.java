@@ -1,7 +1,6 @@
 package fancy.boot.core.id;
 
 import fancy.boot.core.net.NetUtils;
-import fancy.boot.core.system.ProcessUtils;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -60,7 +59,7 @@ public class IdUtils {
      */
     public static long generateWorkerId(long dataCenterId, long maxWorkerId) {
         // DataCenterId + PID 的 HashCode 获取 16 个低位
-        String workerId = String.valueOf(dataCenterId) + ProcessUtils.getCurrentPid();
+        String workerId = String.valueOf(dataCenterId) + ProcessHandle.current().pid();
         return (workerId.hashCode() & 0xFFFF) % (maxWorkerId + 1);
     }
 }

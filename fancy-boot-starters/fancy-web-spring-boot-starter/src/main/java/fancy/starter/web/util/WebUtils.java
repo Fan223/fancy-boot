@@ -45,19 +45,14 @@ public class WebUtils {
      * @param response {@link HttpServletResponse}
      */
     public static void download(File file, HttpServletResponse response) throws IOException {
-        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-
-        if (!file.exists()) {
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            Response<String> res = Response.fail("文件不存在");
-            try (ServletOutputStream out = response.getOutputStream()) {
-                out.write(res.message().getBytes(StandardCharsets.UTF_8));
-                out.flush();
-            }
+        if (file == null || Files.notExists(file.toPath())) {
+            writeFileNotFound(response);
             return;
         }
 
+        response.setCharacterEncoding(StandardCharsets.UTF_8);
         response.setContentLengthLong(file.length());
+
         // 获取文件类型
         String contentType = Files.probeContentType(file.toPath());
         if (null == contentType) {
@@ -74,6 +69,20 @@ public class WebUtils {
         // 将文件写入响应流
         try (FileInputStream in = new FileInputStream(file); ServletOutputStream out = response.getOutputStream()) {
             IOUtils.copy(in, out);
+            out.flush();
+        }
+    }
+
+    /**
+     * 写入文件不存在响应.
+     *
+     * @param response {@link HttpServletResponse}
+     */
+    private static void writeFileNotFound(HttpServletResponse response) throws IOException {
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        Response<String> res = Response.fail("文件不存在");
+        try (ServletOutputStream out = response.getOutputStream()) {
+            out.write(res.message().getBytes(StandardCharsets.UTF_8));
             out.flush();
         }
     }

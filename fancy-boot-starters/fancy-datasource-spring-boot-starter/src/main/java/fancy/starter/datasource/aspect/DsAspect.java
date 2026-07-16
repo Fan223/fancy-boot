@@ -17,13 +17,8 @@ public class DsAspect {
 
     @Around("@within(fancy.starter.datasource.annotation.Ds) || @annotation(fancy.starter.datasource.annotation.Ds)")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        // 解析数据源注解, 没有注解则继续执行原方法
+        // 解析获取动态数据源注解
         Ds ds = AnnotationResolver.resolve(joinPoint, Ds.class);
-        if (ds == null) {
-            return joinPoint.proceed();
-        }
-
-        // 有注解则将数据源标识压入上下文, 执行原方法, 最后弹出数据源标识
         try {
             DataSourceContextHolder.push(ds.value());
             return joinPoint.proceed();

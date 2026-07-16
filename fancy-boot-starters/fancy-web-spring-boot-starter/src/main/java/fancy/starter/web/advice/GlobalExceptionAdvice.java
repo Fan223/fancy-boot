@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionAdvice {
 
     @ExceptionHandler(Exception.class)
-    public Response<String> handleOtherException(Exception exception) {
+    public Response<String> handleException(Exception exception) {
         log.error("系统异常: {}", exception.getMessage(), exception);
         return Response.fail("系统异常: " + exception.getMessage());
     }

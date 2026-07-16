@@ -1,6 +1,7 @@
 package fancy.starter.server.resource.servlet.authentication;
 
 import fancy.boot.core.lang.StringUtils;
+import fancy.starter.server.resource.authentication.InternalAuthenticationConstants;
 import fancy.starter.server.resource.authentication.InternalAuthenticationToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,25 +19,21 @@ import java.security.MessageDigest;
 
 /**
  * {@link ConditionalOnWebApplication.Type#SERVLET} 内部认证过滤器, 在 JWT 校验前运行.
- * 当请求携带正确的 X-Internal-Token 时注入内部认证, 实现服务间内部调用免 JWT 认证.
+ * 当请求携带正确的 {@code X-Internal-Token} 时注入内部认证, 实现服务间内部调用免 JWT 认证.
  *
  * @author Fan
  */
 @RequiredArgsConstructor
 public class ServletInternalAuthenticationFilter extends OncePerRequestFilter {
 
-    private static final String INTERNAL_TOKEN_HEADER = "X-Internal-Token";
-
-    private static final String INTERNAL_SERVICE = "internal-service";
-
     private final String internalToken;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String requestToken = request.getHeader(INTERNAL_TOKEN_HEADER);
+        String requestToken = request.getHeader(InternalAuthenticationConstants.HEADER);
         if (StringUtils.isNotBlank(requestToken) && StringUtils.isNotBlank(internalToken)
                 && MessageDigest.isEqual(requestToken.getBytes(StandardCharsets.UTF_8), internalToken.getBytes(StandardCharsets.UTF_8))) {
-            InternalAuthenticationToken internalAuthenticationToken = new InternalAuthenticationToken(INTERNAL_SERVICE);
+            InternalAuthenticationToken internalAuthenticationToken = new InternalAuthenticationToken(InternalAuthenticationConstants.PRINCIPAL);
             SecurityContextHolder.getContext().setAuthentication(internalAuthenticationToken);
         }
         filterChain.doFilter(request, response);

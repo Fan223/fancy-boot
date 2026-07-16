@@ -23,7 +23,6 @@ import java.nio.charset.StandardCharsets;
  */
 @Slf4j
 @AllArgsConstructor
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class ServletAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final JsonMapper jsonMapper;
